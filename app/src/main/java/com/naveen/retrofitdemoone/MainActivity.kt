@@ -12,26 +12,23 @@ import com.naveen.retrofitdemoone.databinding.ActivityMainBinding
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var retService : AlbumService
    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        val retService = RetrofitInstance
+          retService = RetrofitInstance
             .getRetrofitInstance()
             .create(AlbumService::class.java)
+        getRequestWithQueryParameters()
+//        getRequestWithPathParameters()
 
-        // path parameter example
-        val pathResponse : LiveData<Response<AlbumItem>> = liveData {
-            val response = retService.getAlbum(3)
-            emit(response)
-        }
-        pathResponse.observe(this, Observer {
-            val title:String? = it.body()?.title
-            Toast.makeText(applicationContext,title,Toast.LENGTH_LONG).show()
-        })
+    }
 
+
+    private fun getRequestWithQueryParameters(){
         val responseLiveData: LiveData<Response<Album>> = liveData {
             val response = retService.getSortedAlbums(3)
             emit(response)
@@ -50,7 +47,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-
-
     }
+
+    private fun getRequestWithPathParameters(){
+        // path parameter example
+//        val pathResponse : LiveData<Response<AlbumItem>> = liveData {
+//            val response = retService.getAlbum(3)
+//            emit(response)
+//        }
+//        pathResponse.observe(this, Observer {
+//            val title:String? = it.body()?.title
+//            Toast.makeText(applicationContext,title,Toast.LENGTH_LONG).show()
+//        })
+    }
+
 }
